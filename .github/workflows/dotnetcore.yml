@@ -18,8 +18,8 @@ jobs:
       with:
         dotnet-version: 3.1.101
     - name: Install dependencies
-      run: dotnet restore
+      run: dotnet restore ./Codenames.Service
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build ./Codenames.Service --configuration Release --no-restore
     - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test ./Codenames.Service.Unit.Tests --no-restore --verbosity normal
