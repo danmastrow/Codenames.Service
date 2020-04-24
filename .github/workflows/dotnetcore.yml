@@ -5,6 +5,11 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+env:
+  REGISTRY_NAME: ${{ secrets.CONTAINER_REGISTRY_NAME }} 
+  CLUSTER_NAME: ${{ secrets.KUBERNETES_CLUSTER_NAME }} 
+  CLUSTER_RESOURCE_GROUP: ${{ secrets.KUBERNETES_RESOURCE_GROUP }} 
+  NAMESPACE: ${{ secrets.KUBERNETES_NAMESPACE }} 
 
 jobs:
   build:
@@ -13,13 +18,27 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - uses: azure/docker-login@v1
+      with:
+        login-server: ${{ env.REGISTRY_NAME }}.azurecr.io
+        username: ${{ secrets.CONTAINER_REGISTRY_USERNAME }} 
+        password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
+
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
+
     - name: Install dependencies
       run: dotnet restore ./Codenames.Service
+
     - name: Build
       run: dotnet build ./Codenames.Service --configuration Release --no-restore
+
     - name: Test
       run: dotnet test ./Codenames.Service.Unit.Tests --no-restore --verbosity normal
+
+    # Container build and push to a Azure Container registry (ACR)
+    - run: |
+        docker build ./Codenames.Service -t ${{ env.REGISTRY_NAME }}.azurecr.io/codenamesservice:${{ github.sha }}
+        docker push ${{ env.REGISTRY_NAME }}.azurecr.io/codenamesservice:${{ github.sha }}
