@@ -9,14 +9,12 @@ on:
 jobs:
   pulumi-infra: 
    runs-on: ubuntu-latest
-   outputs:
-      matrix: ${{ steps.pulumi-up.outputs.matrix }}
    steps:
    - uses: actions/checkout@v2
    - name: Pulumi Update
      uses: docker://pulumi/actions
      with:
-        args: up --yes && echo "pulumi stack output --json > pulumi-output.json"
+        args: up --yes && pulumi stack output --json > pulumi-output.json
      env:
         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
         ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
@@ -26,7 +24,7 @@ jobs:
         PULUMI_CI: up
         PULUMI_ROOT: Codenames.Infra
 
-   - name: Upload math result for job 1
+   - name: Upload pulumi output
      uses: actions/upload-artifact@v1
      with:
       name: pulumi-output
@@ -36,7 +34,7 @@ jobs:
    runs-on: ubuntu-latest
    needs: pulumi-infra
    steps:
-     - name: Download math result for job 1
+     - name: Download pulumi output
        uses: actions/download-artifact@v1
        with:
           name: pulumi-output
