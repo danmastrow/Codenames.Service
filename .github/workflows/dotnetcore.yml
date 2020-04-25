@@ -33,6 +33,6 @@ jobs:
    steps:
       - uses: actions/checkout@v2
       - name: Echo matrix
-        run: echo $json_var | jq '.[].name'
+        run: echo ${{ env.PULUMI_OUTPUT }} | jq '.[].name'
         env:
-          json_var: ${{ needs.pulumi-infra.pulumi-up.outputs.matrix}}
+          PULUMI_OUTPUT: ${{ needs.pulumi-infra.pulumi-up.outputs.matrix}}
