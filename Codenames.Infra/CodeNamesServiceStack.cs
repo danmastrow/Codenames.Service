@@ -15,19 +15,25 @@ public class CodeNamesServiceStack : Stack
         {
             Name = containerRegistryName,
             ResourceGroupName = resourceGroup.Name,
-            Sku = "Standard"
+            Sku = "Standard",
+            AdminEnabled = true
         };
 
         var containerRegistry = new Registry(containerRegistryName, containerRegistryArgs);
 
         ResourceGroupName = resourceGroup.Name;
         ContainerRegistryName = containerRegistry.Name;
-
+        ContainerRegistryAdminUsername = containerRegistry.AdminUsername;
     }
+
+    [Output]
+    public Output<string> ContainerRegistryAdminUsername { get; set; }
+
+    [Output]
+    public Output<string> ContainerRegistryName { get; set; }
+
 
     [Output]
     public Output<string> ResourceGroupName { get; set; }
 
-    [Output]
-    public Output<string> ContainerRegistryName { get; set; }
 }
