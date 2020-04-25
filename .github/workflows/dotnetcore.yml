@@ -24,11 +24,11 @@ jobs:
         PULUMI_CI: up
         PULUMI_ROOT: Codenames.Infra
 
-   - name: Upload pulumi output
+   - name: Upload pulumi output artifact
      uses: actions/upload-artifact@v1
      with:
       name: pulumi-output
-      path: pulumi-output.json
+      path: Codenames.Infra/pulumi-output.json
 
   build-deploy:
    runs-on: ubuntu-latest
