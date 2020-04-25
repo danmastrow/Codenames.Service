@@ -16,7 +16,6 @@ jobs:
     - uses: docker://pulumi/actions
       with:
         args: up --yes && ::set-output name=matrix::pulumi stack output --json
-    - id: pulumi-up
       env:
         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
         ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
