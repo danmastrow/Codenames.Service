@@ -35,13 +35,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Echo matrix
-        run: |
-          echo $json_var | jq '.[].name'
+        run: echo $json_var | jq '.[].name'
         env:
           json_var: ${{ needs.pulumi-infra.pulumi-up.outputs.matrix}}
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 3.1.101
-
-   
