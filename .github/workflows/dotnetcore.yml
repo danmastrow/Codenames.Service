@@ -40,7 +40,7 @@ jobs:
           name: pulumi-output     
      - name: Assign pulumi output to env variable
        shell: bash
-       run: echo "::set-env name=PULUMI_OUTPUT::pulumi-output/pulumi-output.json"
+       run: cat pulumi-output/pulumi-output.json | echo "::set-env name=PULUMI_OUTPUT::$value"
      - name: Echo env variable
        shell: bash
        run: echo "${{ env.PULUMI_OUTPUT }}"
