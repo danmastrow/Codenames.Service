@@ -12,12 +12,13 @@ jobs:
    outputs:
       matrix: ${{ steps.pulumi-up.outputs.matrix }}
    steps:
-    - name: Pulumi Update
-    - uses: actions/checkout@v2
-    - uses: docker://pulumi/actions
-      with:
+   - uses: actions/checkout@v2
+   - name: Pulumi Update
+     id: pulumi-up
+     uses: docker://pulumi/actions
+     with:
         args: up --yes && ::set-output name=matrix::pulumi stack output --json
-      env:
+     env:
         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
         ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
         ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
