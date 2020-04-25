@@ -37,9 +37,13 @@ jobs:
      - name: Download pulumi output
        uses: actions/download-artifact@v1
        with:
-          name: pulumi-output
-     - name: Print the final result
+          name: pulumi-output     
+     - name: Assign pulumi output to env variable
        shell: bash
        run: |
           value=`cat pulumi-output/pulumi-output.json`
-          echo The result is $value:
+          |
+          echo "::set-env name=PULUMI_OUTPUT::$value"
+     - name: Echo env variable
+       shell: bash
+       run: echo "${{ env.PULUMI_OUTPUT }}"
