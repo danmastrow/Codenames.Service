@@ -42,6 +42,13 @@ jobs:
        shell: bash
        run: echo "::set-env name=CONTAINER_REGISTRY_NAME::$(jq .ContainerRegistryName pulumi-output/pulumi-output.json)"
             && echo "::set-env name=RESOURCE_GROUP_NAME::$(jq .ResourceGroupName pulumi-output/pulumi-output.json)"
+            && echo "::set-env name=CONTAINER_REGISTRY_ADMIN_USERNAME::$(jq .ContainerRegistryAdminUsername pulumi-output/pulumi-output.json)"
+
      - name: Echo env variable
        shell: bash
-       run: echo "${{ env.CONTAINER_REGISTRY_NAME }}" && echo "${{ env.RESOURCE_GROUP_NAME }}"
+       run: echo "${{ env.CONTAINER_REGISTRY_NAME }}" && echo "${{ env.RESOURCE_GROUP_NAME }}" echo "${{ env.CONTAINER_REGISTRY_ADMIN_USERNAME }}"
+     - uses: azure/docker-login@v1
+       with:
+        login-server: ${{ env.CONTAINER_REGISTRY_NAME }}.azurecr.io
+        username: ${{ env.CONTAINER_REGISTRY_ADMIN_USERNAME }} 
+        password: ${{ secrets.CONTAINER_REGISTRY_ADMIN_PASSWORD }}
