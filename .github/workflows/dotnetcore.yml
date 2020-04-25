@@ -12,6 +12,7 @@ jobs:
    outputs:
       matrix: ${{ steps.pulumi-up.outputs.matrix }}
    steps:
+    - name: Pulumi Update
     - uses: actions/checkout@v2
     - uses: docker://pulumi/actions
       with:
