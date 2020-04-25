@@ -26,3 +26,13 @@ jobs:
         PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
         PULUMI_CI: up
         PULUMI_ROOT: Codenames.Infra
+
+  build-deploy:
+   runs-on: ubuntu-latest
+   needs: pulumi-infra
+   steps:
+      - uses: actions/checkout@v2
+      - name: Echo matrix
+        run: echo $json_var | jq '.[].name'
+        env:
+          json_var: ${{ needs.pulumi-infra.pulumi-up.outputs.matrix}}
