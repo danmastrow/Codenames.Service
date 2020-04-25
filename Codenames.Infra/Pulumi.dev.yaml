@@ -1,5 +1,5 @@
 config:
   Codenames.Infra:containerRegistry: codenamesservicecr
   Codenames.Infra:dev: ""
-  Codenames.Infra:resourceGroup: codenamesservicerg
+  Codenames.Infra:resourceGroup: rg-codenames-service
   azure:location: EastUs
