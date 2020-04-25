@@ -41,9 +41,9 @@ jobs:
           name: pulumi-output     
      - name: Assign pulumi output to env variables
        shell: bash
-       run: echo "::set-env name=CONTAINER_REGISTRY_NAME::$(jq .ContainerRegistryName pulumi-output/pulumi-output.json)"
-            && echo "::set-env name=RESOURCE_GROUP_NAME::$(jq .ResourceGroupName pulumi-output/pulumi-output.json)"
-            && echo "::set-env name=CONTAINER_REGISTRY_ADMIN_USERNAME::$(jq .ContainerRegistryAdminUsername pulumi-output/pulumi-output.json)"
+       run: echo "::set-env name=CONTAINER_REGISTRY_NAME::$(jq .ContainerRegistryName pulumi-output/pulumi-output.json -r)"
+            && echo "::set-env name=RESOURCE_GROUP_NAME::$(jq .ResourceGroupName pulumi-output/pulumi-output.json -r)"
+            && echo "::set-env name=CONTAINER_REGISTRY_ADMIN_USERNAME::$(jq .ContainerRegistryAdminUsername pulumi-output/pulumi-output.json -r)"
      - uses: azure/docker-login@v1
        with:
         login-server: ${{ env.CONTAINER_REGISTRY_NAME }}.azurecr.io
