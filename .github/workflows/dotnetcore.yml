@@ -43,12 +43,26 @@ jobs:
        run: echo "::set-env name=CONTAINER_REGISTRY_NAME::$(jq .ContainerRegistryName pulumi-output/pulumi-output.json)"
             && echo "::set-env name=RESOURCE_GROUP_NAME::$(jq .ResourceGroupName pulumi-output/pulumi-output.json)"
             && echo "::set-env name=CONTAINER_REGISTRY_ADMIN_USERNAME::$(jq .ContainerRegistryAdminUsername pulumi-output/pulumi-output.json)"
-
-     - name: Echo env variable
-       shell: bash
-       run: echo "${{ env.CONTAINER_REGISTRY_NAME }}" && echo "${{ env.RESOURCE_GROUP_NAME }}" echo "${{ env.CONTAINER_REGISTRY_ADMIN_USERNAME }}"
      - uses: azure/docker-login@v1
        with:
         login-server: ${{ env.CONTAINER_REGISTRY_NAME }}.azurecr.io
         username: ${{ env.CONTAINER_REGISTRY_ADMIN_USERNAME }} 
         password: ${{ secrets.CONTAINER_REGISTRY_ADMIN_PASSWORD }}
+     - name: Setup .NET Core
+       uses: actions/setup-dotnet@v1
+       with:
+        dotnet-version: 3.1.101
+
+     - name: Install dependencies
+       run: dotnet restore ./Codenames.Service
+
+     - name: Build
+       run: dotnet build ./Codenames.Service --configuration Release --no-restore
+
+     - name: Test
+       run: dotnet test ./Codenames.Service.Unit.Tests --no-restore --verbosity normal
+
+     - run: |
+        docker build ./Codenames.Service -t ${{ env.CONTAINER_REGISTRY_NAME }}.azurecr.io/codenamesservice:${{ github.sha }}
+        docker push ${{ env.CONTAINER_REGISTRY_NAME }}.azurecr.io/codenamesservice:${{ github.sha }}
+    
