@@ -12,7 +12,7 @@ namespace Codenames.Service.Unit.Tests.Hubs
     public class PingHubTests
     {
         [Fact]
-        public async Task SendingPingShouldSendPongToCaller()
+        public async Task SendingPingShouldSendPongToCallerWithCount()
         {
             var pingHub = new PingHub();
             Mock<IHubCallerClients<IPingClient>> mockClients = new Mock<IHubCallerClients<IPingClient>>();
@@ -24,7 +24,7 @@ namespace Codenames.Service.Unit.Tests.Hubs
             pingHub.Context = mockClientContext.Object;
             await pingHub.Ping();
 
-            mockClientProxy.Verify(c => c.Pong(), Times.AtLeastOnce);
+            mockClientProxy.Verify(c => c.Pong(), Times.Once);
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace Codenames.Service.Unit.Tests.Hubs
             pingHub.Context = mockClientContext.Object;
             await pingHub.Pong();
 
-            mockClientProxy.Verify(c => c.Ping(), Times.AtLeastOnce);
+            mockClientProxy.Verify(c => c.Ping(), Times.Once);
         }
     }
 }
