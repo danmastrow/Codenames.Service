@@ -8,6 +8,9 @@ namespace Codenames.Service.Hubs.Ping
     public class PingHub : Hub<IPingClient>
     {
         private readonly IMemoryCache memoryCache;
+
+        public string PingCountCacheKey(string connectionId) => $"{connectionId}.PingCount";
+
         public PingHub(IMemoryCache memoryCache)
         {
             this.memoryCache = memoryCache;
@@ -15,8 +18,6 @@ namespace Codenames.Service.Hubs.Ping
 
         public override async Task OnConnectedAsync()
         {
-            await Clients.Caller.Pong();
-
             await base.OnConnectedAsync();
         }
 
@@ -27,9 +28,9 @@ namespace Codenames.Service.Hubs.Ping
 
         public async Task Ping()
         {
-            var pingCountCacheKey = $"{Context.ConnectionId}.PingCount";
+            var pingCountCacheKey = PingCountCacheKey(Context.ConnectionId);
             memoryCache.TryGetValue(pingCountCacheKey, out int currentPingCount);
-            var newPingCount = currentPingCount++;
+            var newPingCount = currentPingCount + 1;
             memoryCache.Set(pingCountCacheKey, newPingCount);
             await PingCount(newPingCount);
         }
@@ -37,11 +38,6 @@ namespace Codenames.Service.Hubs.Ping
         public async Task PingCount(int number)
         {
             await Clients.Caller.PingCount(number);
-        }
-
-        public async Task Pong()
-        {
-            await Clients.Caller.Ping();
         }
     }
 }
